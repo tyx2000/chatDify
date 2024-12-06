@@ -9,16 +9,13 @@ import ReAnimated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Message } from '@/interfaces';
-import { useSqlite } from '@/db/sqlite';
 
 const ReAnimatedTextInput = ReAnimated.createAnimatedComponent(TextInput);
 
-export default function InputWrapper() {
+export default function InputWrapper({ send }: { send: Function }) {
   const { bottom } = useSafeAreaInsets();
   const keyboard = useAnimatedKeyboard();
-  const { insertMessage } = useSqlite();
-  const { currentThread = {}, setMessages } = useContext(SystemContext);
+
   const [value, setValue] = useState('');
 
   const translateStyle = useAnimatedStyle(() => ({
@@ -38,58 +35,10 @@ export default function InputWrapper() {
     console.log('input init');
   }, []);
 
-  const send = async (query: string) => {
-    console.log(query);
-    const localSend: Message = {
-      conversation_id: currentThread.conversation_id,
-      message_id: Date.now() + '',
-      created_at: Date.now() + '',
-      type: 'text',
-      sender: 'local',
-      text_content: query,
-    };
-    const localSendSuccess = await insertMessage(
-      localSend.conversation_id,
-      localSend.message_id,
-      localSend.created_at,
-      localSend.type,
-      localSend.sender,
-      localSend.text_content,
-    );
-
-    if (localSendSuccess) {
-      setMessages((c) => [...c, localSend]);
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    const remoteSend: Message = {
-      conversation_id: currentThread.conversation_id,
-      message_id: Date.now() + '',
-      created_at: Date.now() + '',
-      type: 'text',
-      sender: 'remote',
-      text_content: query,
-    };
-
-    const remoteSendSuccess = await insertMessage(
-      remoteSend.conversation_id,
-      remoteSend.message_id,
-      remoteSend.created_at,
-      remoteSend.type,
-      remoteSend.sender,
-      remoteSend.text_content,
-    );
-    if (remoteSendSuccess) {
-      setMessages((c) => [...c, remoteSend]);
-    }
-  };
-
   return (
     <ReAnimated.View style={[{ paddingBottom: bottom || 10 }, styles.wrapper, translateStyle]}>
       <ReAnimatedTextInput
         style={[styles.textInput, { borderColor: inputFocusBorderColor }]}
-        placeholder="Ask something"
         value={value}
         onChange={onTextChange}
         onFocus={() => {
@@ -128,7 +77,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   textInput: {
-    borderWidth: 2,
+    borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: 5,
     height: 35,

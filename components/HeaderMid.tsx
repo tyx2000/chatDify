@@ -58,6 +58,7 @@ export default function HeaderMid() {
     const conversation_id = Date.now() + '',
       title = '未命名';
 
+    console.log('new');
     const success = await insertThread(conversation_id, title);
     if (success) {
       setCurrentThread({ conversation_id, title });

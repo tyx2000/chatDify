@@ -14,13 +14,13 @@ export default function Content() {
   useEffect(() => {
     console.log('content init======================', Date.now());
 
-    SQLite.addDatabaseChangeListener(({ databaseName, tableName, rowId }) => {
-      console.log('listener', databaseName, tableName, rowId);
-      if (databaseName === 'messages') {
-        // @ts-ignore
-        listRef.current && listRef.current.scrollToEnd({ animated: true });
-      }
-    });
+    // SQLite.addDatabaseChangeListener(({ databaseName, tableName, rowId }) => {
+    //   console.log('listener', databaseName, tableName, rowId);
+    //   if (databaseName === 'messages') {
+    //     // @ts-ignore
+    //     listRef.current && listRef.current.scrollToEnd({ animated: true });
+    //   }
+    // });
   }, []);
 
   return (

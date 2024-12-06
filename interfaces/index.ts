@@ -21,7 +21,6 @@ const history = [
 ];
 
 export interface Message {
-  conversation_id: string;
   created_at: string;
   sender: 'local' | 'remote';
   text_content?: string | undefined;

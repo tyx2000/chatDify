@@ -50,5 +50,20 @@ export const useSqlite = () => {
     return !!res.changes;
   };
 
-  return { insertThread, selectAllThread, updateThread, deleteThread, insertMessage };
+  const selectMessage = async (conversation_id: string) => {
+    const res = await db.getAllAsync(
+      'SELECT * from messages WHERE conversation_id = ?',
+      conversation_id,
+    );
+    return res;
+  };
+
+  return {
+    insertThread,
+    selectAllThread,
+    updateThread,
+    deleteThread,
+    insertMessage,
+    selectMessage,
+  };
 };
